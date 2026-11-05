@@ -15,7 +15,8 @@ sensorTestMode = False
 driveSpeed = 200 #200
 turnSpeedDif = 50 #15
 
-heightDriveSpeed = 200 #200
+heightDriveSpeed = 120 #200
+ultrasonicDistance = 50 #80
 
 # Initialize EV3 Brick
 ev3 = EV3Brick()
@@ -65,6 +66,19 @@ def Drive(speed, turnSpeed):
         leftDrive.run(speed)
         rightDrive.run(speed)
 
+def Arm():
+    # Check the distance to the control route
+    distance = ultrasonicSensor.distance()
+    print("Distance to control route: " + str(distance) + " mm")
+    
+    if (distance < ultrasonicDistance):
+        heightDrive.run(heightDriveSpeed)
+        print("Adjusting height upwards")
+    if (distance > ultrasonicDistance):
+        heightDrive.run(-heightDriveSpeed)
+        print("Adjusting height downwards")
+    else:
+        print("Height is correct")
     
 
 
@@ -74,14 +88,4 @@ while (not Button.CENTER in ev3.buttons.pressed()):
         Drive(driveSpeed, turnSpeedDif)
     print(colorSensor.reflection())
 
-    # Check the distance to the control route
-    distance = ultrasonicSensor.distance()
-    print("Distance to control route: " + str(distance) + " mm")
-    if (distance < 80):
-        heightDrive.run(heightDriveSpeed)
-        print("Adjusting height upwards")
-    if (distance > 80):
-        heightDrive.run(-heightDriveSpeed)
-        print("Adjusting height downwards")
-    else:
-        print("Height is correct")
+    Arm()
