@@ -5,16 +5,83 @@ from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
-from pybricks.media.ev3dev import SoundFile, ImageFile
-
 
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
+#Variables
+sensorTestMode = False
 
-# Create your objects here.
+driveSpeed = 200 #200
+turnSpeedDif = 50 #15
+
+heightDriveSpeed = 200 #200
+
+# Initialize EV3 Brick
 ev3 = EV3Brick()
+
+# Initialize motors
+leftDrive = Motor(Port.B)
+rightDrive = Motor(Port.A)
+heightDrive = Motor(Port.C)
+
+leftDrive.positive_direction = Direction.COUNTERCLOCKWISE
+rightDrive.positive_direction = Direction.CLOCKWISE
+
+# Initialize sensors
+colorSensor = ColorSensor(Port.S1)
+
+ultrasonicSensor = UltrasonicSensor(Port.S4)
 
 
 # Write your program here.
 ev3.speaker.beep()
+
+print(turnSpeedDif)
+
+'''
+def Drive(speed, turnSpeed):
+    if (colorSensor.color() == Color.BLACK):
+        leftDrive.run(speed + turnSpeed)
+        rightDrive.run(-speed - turnSpeed)
+    elif (colorSensor.color() == Color.WHITE):
+        leftDrive.run(-speed - turnSpeed)
+        rightDrive.run(speed + turnSpeed)
+    else:
+        leftDrive.run(speed)
+        rightDrive.run(speed)
+
+    print(colorSensor.color())
+'''
+
+def Drive(speed, turnSpeed):
+    if (colorSensor.reflection() <= 50):
+        leftDrive.run(speed + turnSpeed)
+        rightDrive.run(speed - turnSpeed)
+    elif (colorSensor.reflection() > 50):
+        leftDrive.run(speed - turnSpeed)
+        rightDrive.run(speed + turnSpeed)
+    else:
+        leftDrive.run(speed)
+        rightDrive.run(speed)
+
+    
+
+
+while (not Button.CENTER in ev3.buttons.pressed()):
+    # Run the motor
+    if (not sensorTestMode):
+        Drive(driveSpeed, turnSpeedDif)
+    print(colorSensor.reflection())
+
+    # Check the distance to the control route
+    distance = ultrasonicSensor.distance()
+    print("Distance to control route: " + str(distance) + " mm")
+    if (distance < 80):
+        heightDrive.run(heightDriveSpeed)
+        print("Adjusting height upwards")
+    if (distance > 80):
+        heightDrive.run(-heightDriveSpeed)
+        print("Adjusting height downwards")
+    else:
+        print("Height is correct")
