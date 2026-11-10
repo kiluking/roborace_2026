@@ -12,18 +12,18 @@ from pybricks.robotics import DriveBase
 #Variables
 sensorTestMode = False
 
-driveSpeed = 200 #200
-turnSpeedDif = 50 #15
+driveSpeed = 250 #200
+turnSpeedDif = 23 #15
 
-heightDriveSpeed = 120 #200
-ultrasonicDistance = 50 #80
+heightDriveSpeed = 200 #200
+ultrasonicDistance = 60 #80
 
 # Initialize EV3 Brick
 ev3 = EV3Brick()
 
 # Initialize motors
-leftDrive = Motor(Port.B)
-rightDrive = Motor(Port.A)
+leftDrive = Motor(Port.A)
+rightDrive = Motor(Port.B)
 heightDrive = Motor(Port.C)
 
 leftDrive.positive_direction = Direction.COUNTERCLOCKWISE
@@ -72,10 +72,10 @@ def Arm():
     print("Distance to control route: " + str(distance) + " mm")
     
     if (distance < ultrasonicDistance):
-        heightDrive.run(heightDriveSpeed)
+        heightDrive.run(-heightDriveSpeed)
         print("Adjusting height upwards")
     if (distance > ultrasonicDistance):
-        heightDrive.run(-heightDriveSpeed)
+        heightDrive.run(heightDriveSpeed)
         print("Adjusting height downwards")
     else:
         print("Height is correct")
