@@ -12,11 +12,13 @@ from pybricks.robotics import DriveBase
 #Variables
 sensorTestMode = False
 
-driveSpeed = 250 #200
-turnSpeedDif = 23 #15
+driveSpeed = 200 #200
+turnSpeedDif = 15 #15
 
-heightDriveSpeed = 200 #200
-ultrasonicDistance = 60 #80
+heightDriveSpeed = 300 #200
+ultrasonicDistance = 40
+
+  #80
 
 # Initialize EV3 Brick
 ev3 = EV3Brick()
@@ -89,3 +91,5 @@ while (not Button.CENTER in ev3.buttons.pressed()):
     print(colorSensor.reflection())
 
     Arm()
+
+#zu breit, der roboter stößt mit der seite wo der arm dran ist an die sensor strecke und fährt sich fest.
